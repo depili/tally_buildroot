@@ -1,0 +1,47 @@
+#!/bin/sh
+
+INTERFACES_FILE="/boot/interfaces"
+TALLY_FILE="/boot/tally"
+
+start() {
+	echo "Setting up configuration"
+	mkdir /boot
+	mount -r /dev/mmcblk0p1 /boot
+	if [ -e "$INTERFACES_FILE" ]; then
+		echo "Copying network config"
+		mkdir -p /etc/network
+		cp $INTERFACES_FILE /etc/network/interfaces
+	fi
+	if [ -e "$TALLY_FILE" ]; then
+                echo "Copying tally binary"
+                mkdir -p /root
+                cp $TALLY_FILE /root/tally
+		chmod a+x /root/tally
+        fi
+}
+
+stop() {
+	true
+}
+
+restart() {
+	stop
+	start
+}
+
+case "$1" in
+	start)
+		start
+		;;
+	stop)
+		stop
+	;;
+	restart|reload)
+		restart
+		;;
+	*)
+		echo "Usage: $0 {start|stop|restart}"
+		exit 1
+esac
+
+exit $?

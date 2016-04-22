@@ -1,0 +1,4 @@
+config BR2_PACKAGE_E2TALLY
+        bool "e2tally"
+        help
+          E2 Tally software
